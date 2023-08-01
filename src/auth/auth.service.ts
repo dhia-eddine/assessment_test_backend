@@ -28,4 +28,5 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
     return { access_token: accessToken };
   }
+  
 }
