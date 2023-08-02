@@ -24,8 +24,12 @@ export class JobOffersService {
     return this.jobOfferRepository.save(jobOffer);
   }
 
-  async getAllJobOffers(): Promise<JobOffer[]> {
-    return this.jobOfferRepository.find();
+  async getAllJobOffers(
+    page: number = 1,
+    limit: number = 10,
+  ): Promise<JobOffer[]> {
+    const skip = (page - 1) * limit;
+    return this.jobOfferRepository.find({ take: limit, skip });
   }
 
   async getJobOfferById(id: number): Promise<JobOffer> {
@@ -56,6 +60,12 @@ export class JobOffersService {
   async closeJobOffer(id: number): Promise<JobOffer> {
     const jobOffer = await this.getJobOfferById(id);
     jobOffer.open = false;
+    return this.jobOfferRepository.save(jobOffer);
+  }
+
+  async openJobOffer(id: number): Promise<JobOffer> {
+    const jobOffer = await this.getJobOfferById(id);
+    jobOffer.open = true;
     return this.jobOfferRepository.save(jobOffer);
   }
 
