@@ -51,7 +51,7 @@ export class JobOffersService {
 
     jobOffer.jobTitle = jobTitle;
     jobOffer.description = description;
-    jobOffer.applicationDeadline = applicationDeadline;
+    jobOffer.applicationDeadline = new Date(applicationDeadline);
     jobOffer.open = isOpen;
 
     return this.jobOfferRepository.save(jobOffer);

@@ -1,4 +1,10 @@
-import { IsNotEmpty, IsString, IsDate, IsBoolean } from 'class-validator';
+import {
+  IsNotEmpty,
+  IsString,
+  IsDate,
+  IsBoolean,
+  IsDateString,
+} from 'class-validator';
 
 export class UpdateJobOfferDto {
   @IsNotEmpty()
@@ -10,8 +16,8 @@ export class UpdateJobOfferDto {
   description: string;
 
   @IsNotEmpty()
-  @IsDate()
-  applicationDeadline: Date;
+  @IsDateString()
+  applicationDeadline: string;
 
   @IsNotEmpty()
   @IsBoolean()
