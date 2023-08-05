@@ -55,7 +55,7 @@ export class JobOffersController {
   }
 
   @Delete(':id')
-  async deleteJobOffer(@Param('id', ParseIntPipe) id: number): Promise<void> {
+  async deleteJobOffer(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.jobOffersService.deleteJobOffer(id);
   }
 

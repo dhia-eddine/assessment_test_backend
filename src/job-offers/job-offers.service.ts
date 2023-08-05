@@ -1,4 +1,8 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { JobOffer } from './job-offer.entity';
@@ -16,10 +20,17 @@ export class JobOffersService {
     createJobOfferDto: CreateJobOfferDto,
   ): Promise<JobOffer> {
     const { jobTitle, description, applicationDeadline } = createJobOfferDto;
+    const currentDate = new Date();
+    const deadlineDate = new Date(applicationDeadline);
+    if (deadlineDate <= currentDate) {
+      throw new BadRequestException(
+        'Application deadline must be later than the current date',
+      );
+    }
     const jobOffer = this.jobOfferRepository.create({
       jobTitle,
       description,
-      applicationDeadline,
+      applicationDeadline: deadlineDate,
     });
     return this.jobOfferRepository.save(jobOffer);
   }
@@ -69,10 +80,18 @@ export class JobOffersService {
     return this.jobOfferRepository.save(jobOffer);
   }
 
-  async deleteJobOffer(id: number): Promise<void> {
+  async deleteJobOffer(id: number): Promise<string> {
+    const jobOffer = await this.getJobOfferById(id);
+
+    const applicationDeadline = new Date(jobOffer.applicationDeadline);
+    if (jobOffer.open && new Date() <= applicationDeadline) {
+      throw new BadRequestException('Job offer cannot be deleted');
+    }
+
     const result = await this.jobOfferRepository.delete(id);
     if (result.affected === 0) {
       throw new NotFoundException('Job offer not found');
     }
+    return 'successfully deleted';
   }
 }
