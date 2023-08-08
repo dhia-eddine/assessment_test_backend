@@ -7,7 +7,6 @@ dotenv.config();
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-
   //the added start from here
   app.enableCors({
     origin: true, // You can change this to your specific frontend URL (e.g., http://localhost:5173)
@@ -16,7 +15,6 @@ async function bootstrap() {
     credentials: true, // Allow sending cookies
     preflightContinue: false,
   });
-
   // Add a global validation pipe to handle incoming data validation
   app.useGlobalPipes(new ValidationPipe());
 
