@@ -1,4 +1,3 @@
-// assessments/assessments.controller.ts
 import { Controller, Post, Body, ValidationPipe, UseGuards, Param } from '@nestjs/common';
 import { AssessmentsService } from './assessments.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
@@ -15,9 +14,9 @@ export class AssessmentsController {
     private readonly jobOffersService: JobOffersService, // Inject the JobOffersService
   ) {}
 
-  @Post('/create/:jobOfferId')
+  @Post('/create/:jobOfferId') // Use the jobOfferId parameter
   async createAssessment(
-    @Param('jobOfferId') jobOfferId: number,
+    @Param('jobOfferId') jobOfferId: number, // Get jobOfferId from the URL
     @Body(ValidationPipe) createAssessmentDto: CreateAssessmentDto,
   ): Promise<Assessment> {
     const jobOffer: JobOffer = await this.jobOffersService.getJobOfferById(jobOfferId); // Fetch the job offer entity
@@ -27,6 +26,8 @@ export class AssessmentsController {
       createAssessmentDto.passingScore,
       createAssessmentDto.timeLimitMinutes,
     );
+    
   }
 
+  // Other methods for managing assessments
 }

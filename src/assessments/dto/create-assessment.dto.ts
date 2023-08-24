@@ -1,4 +1,4 @@
-import { AssessmentQuestionDto } from './assessment-question.dto';
+import { AssessmentQuestionDto } from "./assessment-question.dto";
 
 export class CreateAssessmentDto {
   questions: AssessmentQuestionDto[];

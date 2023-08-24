@@ -1,10 +1,9 @@
-import { IsNotEmpty, IsString, IsArray, ArrayMinSize, ArrayMaxSize, MinLength, MaxLength } from 'class-validator';
+import { IsNotEmpty, IsString, IsArray, ArrayMinSize, ArrayMaxSize, Min, Max } from 'class-validator';
 
 export class AssessmentQuestionDto {
   @IsNotEmpty()
   @IsString()
-  @MinLength(10)
-  @MaxLength(500)
+  
   question: string;
 
   @IsNotEmpty()
@@ -14,5 +13,6 @@ export class AssessmentQuestionDto {
   answers: string[];
 
   @IsNotEmpty()
+  @Min(0)
   correctAnswerIndex: number;
 }
