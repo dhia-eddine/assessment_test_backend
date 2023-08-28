@@ -7,6 +7,7 @@ import {
   Param,
   Get,
   Delete,
+  Patch,
 } from '@nestjs/common';
 import { AssessmentsService } from './assessments.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
@@ -15,6 +16,7 @@ import { Assessment } from './assessment.entity';
 import { JobOffersService } from '../job-offers/job-offers.service'; // Import the JobOffersService
 import { JobOffer } from '../job-offers/job-offer.entity'; // Import the JobOffer entity
 import { AssessmentQuestionDto } from './dto/assessment-question.dto';
+import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 
 @Controller('assessments')
 @UseGuards(AuthGuard)
@@ -44,6 +46,18 @@ export class AssessmentsController {
     @Param('assessmentId') assessmentId: number,
   ): Promise<Assessment> {
     return this.assessmentsService.getAssessmentById(assessmentId);
+  }
+  @Patch('/:assessmentId')
+  async updateAssessment(
+    @Param('assessmentId') assessmentId: number,
+    @Body() updateAssessmentDto: UpdateAssessmentDto,
+  ): Promise<Assessment> {
+    const { passingScore, timeLimitMinutes } = updateAssessmentDto;
+    return this.assessmentsService.updateAssessment(
+      assessmentId,
+      passingScore,
+      timeLimitMinutes,
+    );
   }
 
   @Delete('/:assessmentId')

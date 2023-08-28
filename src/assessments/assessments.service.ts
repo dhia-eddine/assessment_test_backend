@@ -55,6 +55,28 @@ export class AssessmentsService {
 
     return assessment;
   }
+  // AssessmentsService
+
+  async updateAssessment(
+    assessmentId: number,
+    passingScore: number,
+    timeLimitMinutes: number,
+  ): Promise<Assessment> {
+    const assessment = await this.assessmentRepository
+      .createQueryBuilder('assessment')
+      .leftJoinAndSelect('assessment.questions', 'questions')
+      .where('assessment.id = :assessmentId', { assessmentId })
+      .getOne();
+
+    if (!assessment) {
+      throw new NotFoundException(`Assessment ${assessmentId} not found`);
+    }
+
+    assessment.passingScore = passingScore;
+    assessment.timeLimitMinutes = timeLimitMinutes;
+
+    return this.assessmentRepository.save(assessment);
+  }
 
   async deleteAssessment(assessmentId: number): Promise<void> {
     const assessment = await this.assessmentRepository
