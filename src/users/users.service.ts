@@ -9,16 +9,17 @@ import * as bcrypt from 'bcrypt';
 export class UsersService {
   constructor(@InjectRepository(User) private readonly userRepository: Repository<User>) {}
 
-  async createUser(authCredentialsDto: AuthCredentialsDto): Promise<User> {
+  async createUser(authCredentialsDto: AuthCredentialsDto, role: string): Promise<User> {
     const { email, password } = authCredentialsDto;
     const hashedPassword = await bcrypt.hash(password, 10);
-
+  
     const user = this.userRepository.create({
       email,
       password: hashedPassword,
+      role: role as "admin" | "candidate", // Correctly type the role
     });
-
-    return this.userRepository.save(user);
+  
+    return this.userRepository.save(user);  
   }
 
   async findByEmail(email: string): Promise<User | undefined> {

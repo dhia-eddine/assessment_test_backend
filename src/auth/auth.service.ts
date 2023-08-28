@@ -11,8 +11,12 @@ export class AuthService {
     private readonly jwtService: JwtService,
   ) {}
 
-  async signUp(authCredentialsDto: AuthCredentialsDto): Promise<User> {
-    return this.usersService.createUser(authCredentialsDto);
+  async signUp(
+    authCredentialsDto: AuthCredentialsDto,
+    role: string,
+  ): Promise<User> {
+    const user = await this.usersService.createUser(authCredentialsDto, role);
+    return user;
   }
 
   async signIn(
@@ -24,9 +28,8 @@ export class AuthService {
     if (!user || !(await user.validatePassword(password))) {
       throw new UnauthorizedException('Invalid username or password');
     }
-    const payload = { sub: user.id, email: user.email };
+    const payload = { sub: user.id, email: user.email, role: user.role };
     const accessToken = this.jwtService.sign(payload);
     return { access_token: accessToken };
   }
-  
 }

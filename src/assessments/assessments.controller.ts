@@ -11,7 +11,7 @@ import {
 } from '@nestjs/common';
 import { AssessmentsService } from './assessments.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import { Assessment } from './assessment.entity';
 import { JobOffersService } from '../job-offers/job-offers.service'; // Import the JobOffersService
 import { JobOffer } from '../job-offers/job-offer.entity'; // Import the JobOffer entity

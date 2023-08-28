@@ -15,9 +15,8 @@ import { JobOffersService } from './job-offers.service';
 import { JobOffer } from './job-offer.entity';
 import { CreateJobOfferDto } from './dto/create-job-offer.dto';
 import { UpdateJobOfferDto } from './dto/update-job-offer.dto';
-import { AuthGuard } from '../auth/auth.guard';
+import { AuthGuard } from '../auth/guards/auth.guard';
 import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
-
 
 @Controller('job-offers')
 @UseGuards(AuthGuard) // Apply the AuthGuard to protect all routes in this controller
@@ -25,10 +24,27 @@ export class JobOffersController {
   constructor(private readonly jobOffersService: JobOffersService) {}
 
   @Get()
-  @ApiQuery({ name: 'page', type: Number, required: false, description: 'Page number (default: 1)' })
-  @ApiQuery({ name: 'limit', type: Number, required: false, description: 'Number of items per page (default: 10)' })
-  @ApiResponse({ status: 200, description: 'Successfully retrieved job offers', type: [JobOffer] })
-  async getAllJobOffers(@Query('page') page: number = 1, @Query('limit') limit: number = 10): Promise<JobOffer[]> {
+  @ApiQuery({
+    name: 'page',
+    type: Number,
+    required: false,
+    description: 'Page number (default: 1)',
+  })
+  @ApiQuery({
+    name: 'limit',
+    type: Number,
+    required: false,
+    description: 'Number of items per page (default: 10)',
+  })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully retrieved job offers',
+    type: [JobOffer],
+  })
+  async getAllJobOffers(
+    @Query('page') page: number = 1,
+    @Query('limit') limit: number = 10,
+  ): Promise<JobOffer[]> {
     return this.jobOffersService.getAllJobOffers(page, limit);
   }
 
@@ -66,9 +82,7 @@ export class JobOffersController {
     return this.jobOffersService.closeJobOffer(id);
   }
   @Put(':id/open')
-  async openJobOffer(
-    @Param('id', ParseIntPipe) id: number,
-  ): Promise<JobOffer> {
+  async openJobOffer(@Param('id', ParseIntPipe) id: number): Promise<JobOffer> {
     return this.jobOffersService.openJobOffer(id);
   }
 }
