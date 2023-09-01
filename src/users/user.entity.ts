@@ -1,6 +1,11 @@
 import { Entity, PrimaryGeneratedColumn, Column } from 'typeorm';
 import * as bcrypt from 'bcrypt';
 
+export enum UserRole {
+  ADMIN = 'admin',
+  CANDIDATE = 'candidate',
+}
+
 @Entity()
 export class User {
   @PrimaryGeneratedColumn()
@@ -11,9 +16,13 @@ export class User {
 
   @Column()
   password: string;
-  
-  @Column()
-  role: 'admin' | 'candidate';
+
+  @Column({
+    type: 'enum',
+    enum: UserRole,
+    default: UserRole.CANDIDATE,
+  })
+  role: UserRole;
 
   async validatePassword(password: string): Promise<boolean> {
     return bcrypt.compare(password, this.password);

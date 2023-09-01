@@ -17,13 +17,19 @@ import { CreateJobOfferDto } from './dto/create-job-offer.dto';
 import { UpdateJobOfferDto } from './dto/update-job-offer.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { ApiQuery, ApiResponse, ApiTags } from '@nestjs/swagger';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
+import { Roles } from '../auth/roles.decorator';
+import { UserRole } from 'src/users/user.entity';
+
 
 @Controller('job-offers')
-@UseGuards(AuthGuard) // Apply the AuthGuard to protect all routes in this controller
+@Roles(UserRole.ADMIN)
+@UseGuards(AuthGuard, RolesGuard) // Apply the AuthGuard to protect all routes in this controller
 export class JobOffersController {
   constructor(private readonly jobOffersService: JobOffersService) {}
 
   @Get()
+  @Roles(UserRole.ADMIN)
   @ApiQuery({
     name: 'page',
     type: Number,
@@ -49,6 +55,7 @@ export class JobOffersController {
   }
 
   @Get(':id')
+  @Roles(UserRole.ADMIN)
   async getJobOfferById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<JobOffer> {
@@ -56,6 +63,7 @@ export class JobOffersController {
   }
 
   @Post()
+  @Roles(UserRole.ADMIN)
   async createJobOffer(
     @Body(ValidationPipe) createJobOfferDto: CreateJobOfferDto,
   ): Promise<JobOffer> {
@@ -63,6 +71,7 @@ export class JobOffersController {
   }
 
   @Put(':id')
+  @Roles(UserRole.ADMIN)
   async updateJobOffer(
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) updateJobOfferDto: UpdateJobOfferDto,
@@ -71,17 +80,21 @@ export class JobOffersController {
   }
 
   @Delete(':id')
+  @Roles(UserRole.ADMIN)
   async deleteJobOffer(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.jobOffersService.deleteJobOffer(id);
   }
 
   @Put(':id/close')
+  @Roles(UserRole.ADMIN)
+
   async closeJobOffer(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<JobOffer> {
     return this.jobOffersService.closeJobOffer(id);
   }
   @Put(':id/open')
+  @Roles(UserRole.ADMIN)
   async openJobOffer(@Param('id', ParseIntPipe) id: number): Promise<JobOffer> {
     return this.jobOffersService.openJobOffer(id);
   }

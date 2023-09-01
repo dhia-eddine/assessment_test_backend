@@ -17,6 +17,8 @@ import { JobOffersService } from '../job-offers/job-offers.service'; // Import t
 import { JobOffer } from '../job-offers/job-offer.entity'; // Import the JobOffer entity
 import { AssessmentQuestionDto } from './dto/assessment-question.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
+import { Roles } from 'src/auth/roles.decorator';
+import { UserRole } from 'src/users/user.entity';
 
 @Controller('assessments')
 @UseGuards(AuthGuard)
@@ -27,6 +29,7 @@ export class AssessmentsController {
   ) {}
 
   @Post('/create/:jobOfferId') // Use the jobOfferId parameter
+  @Roles(UserRole.ADMIN)
   async createAssessment(
     @Param('jobOfferId') jobOfferId: number, // Get jobOfferId from the URL
     @Body(ValidationPipe) createAssessmentDto: CreateAssessmentDto,
@@ -42,12 +45,14 @@ export class AssessmentsController {
     );
   }
   @Get('/:assessmentId')
+  @Roles(UserRole.ADMIN)
   async getAssessment(
     @Param('assessmentId') assessmentId: number,
   ): Promise<Assessment> {
     return this.assessmentsService.getAssessmentById(assessmentId);
   }
   @Patch('/:assessmentId')
+  @Roles(UserRole.ADMIN)
   async updateAssessment(
     @Param('assessmentId') assessmentId: number,
     @Body() updateAssessmentDto: UpdateAssessmentDto,
@@ -61,6 +66,7 @@ export class AssessmentsController {
   }
 
   @Delete('/:assessmentId')
+  @Roles(UserRole.ADMIN)
   async deleteAssessment(
     @Param('assessmentId') assessmentId: number,
   ): Promise<void> {
@@ -68,6 +74,7 @@ export class AssessmentsController {
   }
 
   @Post('/add-question/:assessmentId')
+  @Roles(UserRole.ADMIN)
   async addQuestionToAssessment(
     @Param('assessmentId') assessmentId: number,
     @Body(ValidationPipe) questionDto: AssessmentQuestionDto,
@@ -78,6 +85,7 @@ export class AssessmentsController {
     );
   }
   @Get('/questions/:assessmentId')
+  @Roles(UserRole.ADMIN)
   async getAssessmentQuestions(
     @Param('assessmentId') assessmentId: number,
   ): Promise<{
@@ -89,6 +97,7 @@ export class AssessmentsController {
     return this.assessmentsService.getAssessmentQuestions(assessmentId);
   }
   @Delete('/questions/:assessmentId/:questionId')
+  @Roles(UserRole.ADMIN)
   async deleteQuestionFromAssessment(
     @Param('assessmentId') assessmentId: number,
     @Param('questionId') questionId: number,

@@ -1,6 +1,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { UsersService } from '../users/users.service';
-import { User } from '../users/user.entity';
+import { User, UserRole } from '../users/user.entity';
 import { AuthCredentialsDto } from './auth-credentials.dto';
 import { JwtService } from '@nestjs/jwt';
 
@@ -13,7 +13,7 @@ export class AuthService {
 
   async signUp(
     authCredentialsDto: AuthCredentialsDto,
-    role: string,
+    role: UserRole,
   ): Promise<User> {
     const user = await this.usersService.createUser(authCredentialsDto, role);
     return user;
