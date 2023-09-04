@@ -21,10 +21,9 @@ import { RolesGuard } from 'src/auth/guards/roles.guard';
 import { Roles } from '../auth/roles.decorator';
 import { UserRole } from 'src/users/user.entity';
 
-
 @Controller('job-offers')
 @Roles(UserRole.ADMIN)
-@UseGuards(AuthGuard, RolesGuard) // Apply the AuthGuard to protect all routes in this controller
+@UseGuards(AuthGuard, RolesGuard)
 export class JobOffersController {
   constructor(private readonly jobOffersService: JobOffersService) {}
 
@@ -52,6 +51,12 @@ export class JobOffersController {
     @Query('limit') limit: number = 10,
   ): Promise<JobOffer[]> {
     return this.jobOffersService.getAllJobOffers(page, limit);
+  }
+  @Get('opens')
+  @Roles(UserRole.CANDIDATE)
+  async getOpenJobOffers(
+  ): Promise<JobOffer[]> {
+    return this.jobOffersService.getOpenJobOffers();
   }
 
   @Get(':id')
@@ -87,7 +92,6 @@ export class JobOffersController {
 
   @Put(':id/close')
   @Roles(UserRole.ADMIN)
-
   async closeJobOffer(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<JobOffer> {

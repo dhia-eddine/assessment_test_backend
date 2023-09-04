@@ -4,7 +4,7 @@ import {
   NotFoundException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { JobOffer } from './job-offer.entity';
 import { CreateJobOfferDto } from './dto/create-job-offer.dto';
 import { UpdateJobOfferDto } from './dto/update-job-offer.dto';
@@ -93,5 +93,15 @@ export class JobOffersService {
       throw new NotFoundException('Job offer not found');
     }
     return 'successfully deleted';
+  }
+  async getOpenJobOffers(): Promise<JobOffer[]> {
+    const today = new Date();
+    return this.jobOfferRepository.find({
+      where: {
+        open: true,
+        applicationDeadline: MoreThan(today),
+      },
+      select: ['jobTitle', 'description', 'applicationDeadline'],
+    });
   }
 }

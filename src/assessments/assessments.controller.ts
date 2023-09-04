@@ -13,8 +13,8 @@ import { AssessmentsService } from './assessments.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { Assessment } from './assessment.entity';
-import { JobOffersService } from '../job-offers/job-offers.service'; // Import the JobOffersService
-import { JobOffer } from '../job-offers/job-offer.entity'; // Import the JobOffer entity
+import { JobOffersService } from '../job-offers/job-offers.service'; 
+import { JobOffer } from '../job-offers/job-offer.entity'; 
 import { AssessmentQuestionDto } from './dto/assessment-question.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { Roles } from 'src/auth/roles.decorator';
