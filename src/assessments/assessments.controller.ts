@@ -13,30 +13,31 @@ import { AssessmentsService } from './assessments.service';
 import { CreateAssessmentDto } from './dto/create-assessment.dto';
 import { AuthGuard } from '../auth/guards/auth.guard';
 import { Assessment } from './assessment.entity';
-import { JobOffersService } from '../job-offers/job-offers.service'; 
-import { JobOffer } from '../job-offers/job-offer.entity'; 
+import { JobOffersService } from '../job-offers/job-offers.service';
+import { JobOffer } from '../job-offers/job-offer.entity';
 import { AssessmentQuestionDto } from './dto/assessment-question.dto';
 import { UpdateAssessmentDto } from './dto/update-assessment.dto';
 import { Roles } from 'src/auth/roles.decorator';
 import { UserRole } from 'src/users/user.entity';
+import { RolesGuard } from 'src/auth/guards/roles.guard';
 
 @Controller('assessments')
-@UseGuards(AuthGuard)
+@UseGuards(AuthGuard, RolesGuard)
+@Roles(UserRole.ADMIN)
 export class AssessmentsController {
   constructor(
     private readonly assessmentsService: AssessmentsService,
-    private readonly jobOffersService: JobOffersService, // Inject the JobOffersService
+    private readonly jobOffersService: JobOffersService,
   ) {}
 
-  @Post('/create/:jobOfferId') // Use the jobOfferId parameter
-  @Roles(UserRole.ADMIN)
+  @Post('/create/:jobOfferId')
   async createAssessment(
-    @Param('jobOfferId') jobOfferId: number, // Get jobOfferId from the URL
+    @Param('jobOfferId') jobOfferId: number,
     @Body(ValidationPipe) createAssessmentDto: CreateAssessmentDto,
   ): Promise<Assessment> {
     const jobOffer: JobOffer = await this.jobOffersService.getJobOfferById(
       jobOfferId,
-    ); // Fetch the job offer entity
+    );
     return this.assessmentsService.createAssessment(
       jobOffer,
       createAssessmentDto.questions,
@@ -45,14 +46,12 @@ export class AssessmentsController {
     );
   }
   @Get('/:assessmentId')
-  @Roles(UserRole.ADMIN)
   async getAssessment(
     @Param('assessmentId') assessmentId: number,
   ): Promise<Assessment> {
     return this.assessmentsService.getAssessmentById(assessmentId);
   }
   @Patch('/:assessmentId')
-  @Roles(UserRole.ADMIN)
   async updateAssessment(
     @Param('assessmentId') assessmentId: number,
     @Body() updateAssessmentDto: UpdateAssessmentDto,
@@ -66,7 +65,6 @@ export class AssessmentsController {
   }
 
   @Delete('/:assessmentId')
-  @Roles(UserRole.ADMIN)
   async deleteAssessment(
     @Param('assessmentId') assessmentId: number,
   ): Promise<void> {
@@ -74,7 +72,6 @@ export class AssessmentsController {
   }
 
   @Post('/add-question/:assessmentId')
-  @Roles(UserRole.ADMIN)
   async addQuestionToAssessment(
     @Param('assessmentId') assessmentId: number,
     @Body(ValidationPipe) questionDto: AssessmentQuestionDto,
@@ -85,7 +82,6 @@ export class AssessmentsController {
     );
   }
   @Get('/questions/:assessmentId')
-  @Roles(UserRole.ADMIN)
   async getAssessmentQuestions(
     @Param('assessmentId') assessmentId: number,
   ): Promise<{
@@ -97,7 +93,6 @@ export class AssessmentsController {
     return this.assessmentsService.getAssessmentQuestions(assessmentId);
   }
   @Delete('/questions/:assessmentId/:questionId')
-  @Roles(UserRole.ADMIN)
   async deleteQuestionFromAssessment(
     @Param('assessmentId') assessmentId: number,
     @Param('questionId') questionId: number,

@@ -22,13 +22,12 @@ import { Roles } from '../auth/roles.decorator';
 import { UserRole } from 'src/users/user.entity';
 
 @Controller('job-offers')
-@Roles(UserRole.ADMIN)
 @UseGuards(AuthGuard, RolesGuard)
+@Roles(UserRole.ADMIN)
 export class JobOffersController {
   constructor(private readonly jobOffersService: JobOffersService) {}
 
   @Get()
-  @Roles(UserRole.ADMIN)
   @ApiQuery({
     name: 'page',
     type: Number,
@@ -54,13 +53,11 @@ export class JobOffersController {
   }
   @Get('opens')
   @Roles(UserRole.CANDIDATE)
-  async getOpenJobOffers(
-  ): Promise<JobOffer[]> {
+  async getOpenJobOffers(): Promise<JobOffer[]> {
     return this.jobOffersService.getOpenJobOffers();
   }
 
   @Get(':id')
-  @Roles(UserRole.ADMIN)
   async getJobOfferById(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<JobOffer> {
@@ -68,7 +65,6 @@ export class JobOffersController {
   }
 
   @Post()
-  @Roles(UserRole.ADMIN)
   async createJobOffer(
     @Body(ValidationPipe) createJobOfferDto: CreateJobOfferDto,
   ): Promise<JobOffer> {
@@ -76,7 +72,6 @@ export class JobOffersController {
   }
 
   @Put(':id')
-  @Roles(UserRole.ADMIN)
   async updateJobOffer(
     @Param('id', ParseIntPipe) id: number,
     @Body(ValidationPipe) updateJobOfferDto: UpdateJobOfferDto,
@@ -85,20 +80,17 @@ export class JobOffersController {
   }
 
   @Delete(':id')
-  @Roles(UserRole.ADMIN)
   async deleteJobOffer(@Param('id', ParseIntPipe) id: number): Promise<string> {
     return this.jobOffersService.deleteJobOffer(id);
   }
 
   @Put(':id/close')
-  @Roles(UserRole.ADMIN)
   async closeJobOffer(
     @Param('id', ParseIntPipe) id: number,
   ): Promise<JobOffer> {
     return this.jobOffersService.closeJobOffer(id);
   }
   @Put(':id/open')
-  @Roles(UserRole.ADMIN)
   async openJobOffer(@Param('id', ParseIntPipe) id: number): Promise<JobOffer> {
     return this.jobOffersService.openJobOffer(id);
   }
